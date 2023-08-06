@@ -59,9 +59,9 @@ setup_wordpress(){
 
     cd site
     wget https://wordpress.org/latest.tar.gz || exit 1
-    tar -xvf latest.tar.gz || exit 1
+    tar -xvf latest.tar.gz > /dev/null || exit 1
     mv wordpress/* .
-    rm latest.tar.gz > /dev/null
+    rm latest.tar.gz
     rmdir wordpress
     cd ..
 
@@ -99,6 +99,15 @@ case "$type" in
         if [ -z "$(grep -E "127.0.0.1 ${site_name}^" /etc/hosts )" ]; then
             echo "127.0.0.1 ${site_name}" | sudo tee -a /etc/hosts > /dev/null
         fi
+
+        echo "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+        echo "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+        echo "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+        echo "Wordpress Site is up and working now at - ${site_name}"
+        echo "Please open your browser and complete its setup"
+        echo "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+        echo "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+        echo "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
         ;;
     "disable")
         echo "Performing action - disable:"
@@ -109,7 +118,7 @@ case "$type" in
         docker-compose down
         docker system prune -a -f
         rm -rf site/* nginx/logs/*
-        touch nginx/logs/access.log nginx/logs/erorr.log
+        touch nginx/logs/access.log nginx/logs/error.log
         ;;
     *)
         echo "Invalid type"
