@@ -100,6 +100,17 @@ case "$type" in
             echo "127.0.0.1 ${site_name}" | sudo tee -a /etc/hosts > /dev/null
         fi
         ;;
+    "disable")
+        echo "Performing action - disable:"
+        docker-compose down
+        ;;
+    "destroy_setup")
+        echo "Performing action - destroy_setup:"
+        docker-compose down
+        docker system prune -a -f
+        rm -rf site/* nginx/logs/*
+        touch nginx/logs/access.log nginx/logs/erorr.log
+        ;;
     *)
         echo "Invalid type"
         display_usage
