@@ -31,7 +31,7 @@ if [ $# -eq 2 ]; then
 fi
 
 install_docker() {
-    docker --vesrion &> /dev/null
+    docker --version &> /dev/null
     if [ $? == 0 ]; then echo "Docker is already installed"; return 0; fi
 
     curl -fsSL https://get.docker.com -o get-docker.sh
@@ -45,7 +45,7 @@ install_docker() {
 }
 
 install_docker_compose() {
-    docker-compose --vesrion &> /dev/null
+    docker-compose --version &> /dev/null
     if [ $? == 0 ]; then echo "Docker Compose is already installed"; return 0; fi
 
     sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
