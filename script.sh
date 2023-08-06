@@ -2,9 +2,9 @@
 
 # Function to display usage message
 display_usage() {
-    echo "Usage: $0 <type> [site_name]"
-    echo "  type: Specify - setup_env / enable / disable / destroy_setup."
-    echo "  site_name: Specify the site name (if first parameter is 'enable')."
+    >&2 echo "Usage: $0 <type> [site_name]"
+    >&2 echo "  type: Specify - setup_env / enable / disable / destroy_setup."
+    >&2 echo "  site_name: Specify the site name (if first parameter is 'enable')."
 }
 
 # Check if the number of arguments is less than 1
@@ -20,7 +20,7 @@ type="$1"
 site_name=""
 
 if [ "${type}" == "enable" ] && [ $# -ne 2 ]; then 
-    echo "site_name is required in case of 'enable' type"
+    >&2 echo "site_name is required in case of 'enable' type"
     display_usage
     exit 1
 fi
@@ -31,21 +31,21 @@ if [ $# -eq 2 ]; then
 fi
 
 install_docker() {
-    docker --version > /dev/null
+    docker --version 2> /dev/null
     if [ $? == 0 ]; then echo "Docker is already installed"; return 0; fi
 
     curl -fsSL https://get.docker.com -o get-docker.sh
     sudo sh ./get-docker.sh
 
-    sudo chmod 666 /var/run/docker.sock
+    sudo chmod 666 /var/run/docker.sock # temp solution
     sudo groupadd docker
-    sudo usermod -aG docker ${USER}
+    sudo usermod -aG docker ${USER} # permanent solution
 
     rm  get-docker.sh
 }
 
 install_docker_compose() {
-    docker-compose --version > /dev/null
+    docker-compose --version 2> /dev/null
     if [ $? == 0 ]; then echo "Docker Compose is already installed"; return 0; fi
 
     sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
@@ -90,9 +90,9 @@ case "$type" in
         echo "Performing action - enable:"
         install_docker
         install_docker_compose
-        if [ ! -s .env ]; then echo "Environment file not found"; exit 1; fi
+        if [ ! -s .env ]; then >&2 echo "Environment file not found"; exit 1; fi
         setup_wordpress
-        if [ ! -f docker-compose.yml ]; then echo "Docker Compose file not found"; exit 1; fi
+        if [ ! -f docker-compose.yml ]; then >&2 echo "Docker Compose file not found"; exit 1; fi
         docker-compose up -d
 
         # checking for /etc/hosts entry
@@ -121,7 +121,7 @@ case "$type" in
         touch nginx/logs/access.log nginx/logs/error.log
         ;;
     *)
-        echo "Invalid type"
+        >&2 echo "Invalid type"
         display_usage
         exit 1
         ;;
