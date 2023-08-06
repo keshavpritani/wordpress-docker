@@ -19,6 +19,12 @@ type="$1"
 # Set the site name (useful if the parameter is not specified)
 site_name=""
 
+if [ "${type}" == "enable" ] && [ $# -ne 2 ]; then 
+    echo "site_name is required in case of 'enable' type"
+    display_usage
+    exit 1
+fi
+
 # Check if the site name is provided
 if [ $# -eq 2 ]; then
     site_name="$2"
