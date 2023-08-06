@@ -31,7 +31,7 @@ if [ $# -eq 2 ]; then
 fi
 
 install_docker() {
-    docker --version &> /dev/null
+    docker --version > /dev/null
     if [ $? == 0 ]; then echo "Docker is already installed"; return 0; fi
 
     curl -fsSL https://get.docker.com -o get-docker.sh
@@ -45,7 +45,7 @@ install_docker() {
 }
 
 install_docker_compose() {
-    docker-compose --version &> /dev/null
+    docker-compose --version > /dev/null
     if [ $? == 0 ]; then echo "Docker Compose is already installed"; return 0; fi
 
     sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
@@ -61,7 +61,7 @@ setup_wordpress(){
     wget https://wordpress.org/latest.tar.gz || exit 1
     tar -xvf latest.tar.gz || exit 1
     mv wordpress/* .
-    rm latest.tar.gz
+    rm latest.tar.gz > /dev/null
     rmdir wordpress
     cd ..
 
@@ -94,6 +94,11 @@ case "$type" in
         setup_wordpress
         if [ ! -f docker-compose.yml ]; then echo "Docker Compose file not found"; exit 1; fi
         docker-compose up -d
+        
+        # checking for /etc/hosts entry
+        if [ -s "$(grep ${site_name} /etc/hosts )" ]; then
+            sudo echo "${site_name} localhost" >> /etc/hosts
+        fi
         ;;
     *)
         echo "Invalid type"
