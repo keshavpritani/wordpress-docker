@@ -1,0 +1,24 @@
+nginx:
+    image: 'nginx:1.21'
+    ports:
+        - '80:80'
+    links:
+        - php
+    volumes:
+        - ./nginx/logs/access.log:/var/log/nginx/site-access.log
+        - ./nginx/logs/error.log:/var/log/nginx/site-error.log
+        - ./nginx:/etc/nginx/conf.d
+        - ./site:/site
+php:
+    image: 'bitnami/php-fpm'
+    ports:
+        - '9000:9000'
+    volumes:
+        - ./site:/site
+mysql:
+    image: 'mysql:8.0'
+    env_file: .env
+    ports:
+        - '3306:3306'
+    volumes:
+        - ./database:/var/lib/mysql
