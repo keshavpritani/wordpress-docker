@@ -3,7 +3,7 @@
 # Function to display usage message
 display_usage() {
     echo "Usage: $0 <type> [site_name]"
-    echo "  type: Specify - setup_env / enable / disable / destory_setup."
+    echo "  type: Specify - setup_env / enable / disable / destroy_setup."
     echo "  site_name: Specify the site name (if first parameter is 'enable')."
 }
 
@@ -96,8 +96,8 @@ case "$type" in
         docker-compose up -d
 
         # checking for /etc/hosts entry
-        if [ ! -s "$(grep ${site_name} /etc/hosts )" ]; then
-            echo "${site_name} localhost" | sudo tee -a /etc/hosts > /dev/null
+        if [ -z "$(grep -E "127.0.0.1 ${site_name}^" /etc/hosts )" ]; then
+            echo "127.0.0.1 ${site_name}" | sudo tee -a /etc/hosts > /dev/null
         fi
         ;;
     *)
