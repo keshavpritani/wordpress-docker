@@ -117,7 +117,7 @@ case "$type" in
         echo "Performing action - destroy_setup:"
         docker-compose down
         docker system prune -a -f
-        rm -rf site/* nginx/logs/*
+        rm -rf site/* nginx/logs/* database/* .env
         touch nginx/logs/access.log nginx/logs/error.log
         ;;
     *)
