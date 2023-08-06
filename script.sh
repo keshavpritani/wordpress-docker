@@ -57,20 +57,20 @@ setup_wordpress(){
     mv wordpress/* .
     rm latest.tar.gz
     rmdir wordpress
+    cd ..
 
-    echo "define('FORCE_SSL_ADMIN', true);" >> wp-config-sample.php
+    echo "define('FORCE_SSL_ADMIN', true);" >> site/wp-config-sample.php
 
-    cp wp-config-sample.php wp-config.php
+    cp site/wp-config-sample.php site/wp-config.php
 
     export $(cat .env | xargs)
     host_ip=$(hostname -i)
 
-    sed -i "s/localhost/${host_ip}/g" wp-config.php
-    sed -i "s/username_here/${MYSQL_USER}/g" wp-config.php
-    sed -i "s/password_here/${MYSQL_PASSWORD}/g" wp-config.php
-    sed -i "s/database_name_here/${MYSQL_DATABASE}/g" wp-config.php
+    sed -i "s/localhost/${host_ip}/g" site/wp-config.php
+    sed -i "s/username_here/${MYSQL_USER}/g" site/wp-config.php
+    sed -i "s/password_here/${MYSQL_PASSWORD}/g" site/wp-config.php
+    sed -i "s/database_name_here/${MYSQL_DATABASE}/g" site/wp-config.php
 
-    cd ..
 }
 
 # Switch case to perform different actions based on the value of the type
@@ -84,9 +84,9 @@ case "$type" in
         echo "Performing action - enable:"
         install_docker
         install_docker_compose
-        if [ -s .env ]; then echo "Environment file not found"; exit 1; fi
+        if [ ! -s .env ]; then echo "Environment file not found"; exit 1; fi
         setup_wordpress
-        if [ -f docker-compose.yml ]; then echo "Docker Compose file not found"; exit 1; fi
+        if [ ! -f docker-compose.yml ]; then echo "Docker Compose file not found"; exit 1; fi
         docker-compose up -d
         ;;
     *)
