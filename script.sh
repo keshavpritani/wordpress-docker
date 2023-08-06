@@ -94,9 +94,9 @@ case "$type" in
         setup_wordpress
         if [ ! -f docker-compose.yml ]; then echo "Docker Compose file not found"; exit 1; fi
         docker-compose up -d
-        
+
         # checking for /etc/hosts entry
-        if [ -s "$(grep ${site_name} /etc/hosts )" ]; then
+        if [ ! -s "$(grep ${site_name} /etc/hosts )" ]; then
             sudo echo "${site_name} localhost" >> /etc/hosts
         fi
         ;;
