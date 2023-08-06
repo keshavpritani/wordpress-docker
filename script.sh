@@ -97,7 +97,7 @@ case "$type" in
 
         # checking for /etc/hosts entry
         if [ ! -s "$(grep ${site_name} /etc/hosts )" ]; then
-            sudo echo "${site_name} localhost" >> /etc/hosts
+            echo "${site_name} localhost" | sudo tee -a /etc/hosts > /dev/null
         fi
         ;;
     *)
