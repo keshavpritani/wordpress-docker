@@ -72,3 +72,26 @@ setup_wordpress(){
 
     cd ..
 }
+
+# Switch case to perform different actions based on the value of the type
+case "$type" in
+    "setup_env")
+        echo "Performing action - setup_env:"
+        install_docker
+        install_docker_compose
+        ;;
+    "enable")
+        echo "Performing action - enable:"
+        install_docker
+        install_docker_compose
+        if [ -s .env ]; then echo "Environment file not found"; exit 1; fi
+        setup_wordpress
+        if [ -f docker-compose.yml ]; then echo "Docker Compose file not found"; exit 1; fi
+        docker-compose up -d
+        ;;
+    *)
+        echo "Invalid type"
+        display_usage
+        exit 1
+        ;;
+esac
