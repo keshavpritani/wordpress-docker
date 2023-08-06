@@ -96,7 +96,7 @@ case "$type" in
         docker-compose up -d
 
         # checking for /etc/hosts entry
-        if [ -z "$(grep -E "127.0.0.1 ${site_name}^" /etc/hosts )" ]; then
+        if [ -z "$(grep -E "127.0.0.1 ${site_name}$" /etc/hosts )" ]; then
             echo "127.0.0.1 ${site_name}" | sudo tee -a /etc/hosts > /dev/null
         fi
 
